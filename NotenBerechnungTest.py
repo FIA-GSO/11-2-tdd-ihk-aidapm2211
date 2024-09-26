@@ -1,6 +1,6 @@
 import pytest
 
-from NotenBerechnung import berechne_prozentwert
+from NotenBerechnung import berechne_prozentwert, ermittle_note
 
 
 # Positive Tests for `berechne_prozentwert`
@@ -14,13 +14,33 @@ from NotenBerechnung import berechne_prozentwert
         (25, 50, 50.0),  # 25 von 50 Punkten -> 50%
     ]
 )
+
 def test_berechne_prozentwert(erreichte_punkte, maximale_punkte, expected):
     # Act
     result = berechne_prozentwert(erreichte_punkte, maximale_punkte)
 
     # Assert
     assert result == expected
+@pytest.mark.parametrize(
+    "prozentwert, expected_note",
+    [
+        (95.0, "sehr gut"),  # 95% -> sehr gut
+        (92.0, "sehr gut"),  # 92% -> sehr gut (Grenzwert)
+        (85.0, "gut"),  # 85% -> gut
+        (81.0, "gut"),  # 81% -> gut (Grenzwert)
+        (70.0, "befriedigend"),  # 70% -> befriedigend
+        (67.0, "befriedigend"),  # 67% -> befriedigend (Grenzwert)
+        (55.0, "ausreichend"),  # 55% -> ausreichend
+        (50.0, "ausreichend"),  # 50% -> ausreichend (Grenzwert)
+        (45.0, "ungenügend")  # 45% -> ungenügend
+    ]
+)
+def test_ermittle_note_pos(prozentwert, expected_note):
+    # Act
+    result = ermittle_note(prozentwert)
 
+    # Assert
+    assert result == expected_note
 
 # Negative Tests for `berechne_prozentwert` (ValueError and TypeError)
 @pytest.mark.parametrize(
